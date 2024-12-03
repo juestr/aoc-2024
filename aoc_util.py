@@ -68,10 +68,10 @@ def readfile(fn):
         return fd.read()
 
 
-def read_pd_table(fn, dtype="uint8", offs=0):
+def read_pd_table(fn, *args, **kw):
     """Read whitespace separated tabular data to a pandas dataframe"""
     import pandas as pd  # noqa: autoimport
-    return pd.read_table(fn, sep=r'\s+', header=None)
+    return pd.read_table(fn, sep=r'\s+', header=None, *args, **kw)
 
 
 def np_raw_table(input, dtype="uint8", offs=0):
