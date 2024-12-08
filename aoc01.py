@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-import pandas as pd
-
 from aoc_util import read_pd_table, run_aoc
 
 

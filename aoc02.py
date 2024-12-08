@@ -6,9 +6,8 @@ from aoc_util import run_aoc
 
 
 def aoc02(reports):
-
-    increasing = set((1, 2, 3))
-    decreasing = set((-1, -2, -3))
+    increasing = {1, 2, 3}
+    decreasing = {-1, -2, -3}
 
     def safe(report):
         steps = set(a - b for a, b in pairwise(report))
@@ -24,5 +23,5 @@ def aoc02(reports):
     yield sum(map(safe2, reports))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_aoc(aoc02, split="lines_fields", apply=int)

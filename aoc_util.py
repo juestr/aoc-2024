@@ -71,7 +71,8 @@ def readfile(fn):
 def read_pd_table(fn, *args, **kw):
     """Read whitespace separated tabular data to a pandas dataframe"""
     import pandas as pd  # noqa: autoimport
-    return pd.read_table(fn, sep=r'\s+', header=None, *args, **kw)
+
+    return pd.read_table(fn, sep=r"\s+", header=None, *args, **kw)
 
 
 def np_raw_table(input, dtype="uint8", offs=0):
@@ -224,7 +225,6 @@ def run_aoc(
 
     info("")
     lap_time("Setup time: ")
-    info("")
 
     try:
         results = []
@@ -238,7 +238,9 @@ def run_aoc(
                 if str(r) == expected:
                     info("✅ matches the expected value\n")
                 else:
-                    warn("❌ does not match %s%s\n", "\n" * ("\n" in expected), expected)
+                    warn(
+                        "❌ does not match %s%s\n", "\n" * ("\n" in expected), expected
+                    )
             lap_time("Result time: ")
             info("🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄🎄\n")
         total_time()
