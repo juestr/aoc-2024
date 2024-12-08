@@ -16,14 +16,10 @@ else
   echo "Creating skeleton $fn"
   printf "#!/usr/bin/env python3
 
-from itertools import pairwise
-
-from funcy import map, lmap, mapcat, lmapcat
+from funcy import map, lmap, mapcat, lmapcat, pairwise
 import numpy as np
 import pandas as pd
 from aoc_util import run_aoc, error, info, debug, dbg, np_raw_table
-
-np, pd, pairwise, dbg, map, lmap, mapcat, lmapcat
 
 def aoc%02d(input):
 

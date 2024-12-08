@@ -1,0 +1,4 @@
+funcy
+numpy
+scipy
+pandas
