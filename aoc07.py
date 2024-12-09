@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from funcy import curry
+
 from aoc_util import run_aoc
 
 
@@ -10,14 +12,15 @@ def parse(line):
 
 def aoc07(equations):
     def test(result, xs, check):
-        def inner(result, pos):
+        @curry
+        def inner(pos, result):
             last = xs[pos]
             if pos == 0:
                 return last == result
             else:
-                return check(result, last, lambda r: inner(r, pos - 1))
+                return check(result, last, inner(pos - 1))
 
-        return inner(result, len(xs) - 1)
+        return inner(len(xs) - 1)(result)
 
     def check_add_mul(result, last, cont):
         return (last <= result and cont(result - last)) or (
