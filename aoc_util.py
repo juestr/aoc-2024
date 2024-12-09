@@ -26,7 +26,7 @@ def _fix_lambda(f, default=lambda x: x):
             return f
 
 
-def dbg(*args, s=" ", r=False, p=False, m=None, t=None, l=logging.DEBUG, apply=None):
+def dbg(*args, s=" ", r=False, p=False, m=None, t=None, l=logging.DEBUG, apply=None):  # noqa: E741
     """Simple logging.debug helper"""
     if _root_logger.isEnabledFor(l):
         n = len(args)
@@ -79,9 +79,9 @@ def np_raw_table(input, dtype="uint8", offs=0):
     """Transform raw tabular data to a 2d np.array"""
     import numpy as np  # noqa: autoimport
 
-    l = input.index("\n")
+    n = input.index("\n")
     flat = np.fromstring(input, dtype=dtype)
-    return (flat.reshape((-1, l + 1))[:, :-1] - offs,)
+    return (flat.reshape((-1, n + 1))[:, :-1] - offs,)
 
 
 def mk_input_reader(
@@ -195,7 +195,7 @@ def run_aoc(
 
     t0 = t1 = t2 = timeit.default_timer()
     day = day or int(aocf.__name__[-2:])
-    session = os.environ.get("SESSION")
+    # session = os.environ.get("SESSION")
     loglevel = os.environ.get("LOGLEVEL", "INFO").upper()
     cmdargs = mk_parser(day, loglevel).parse_args()
     assert (
