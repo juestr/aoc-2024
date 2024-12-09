@@ -27,16 +27,6 @@ def aoc08(data):
             x[:, np.newaxis] + dx,
         )
 
-    ROWS, COLS = data.shape
-    ANTENNA_Y, ANTENNA_X = (data != ord(".")).nonzero()
-    ANTENNA_NAMES = data[(ANTENNA_Y, ANTENNA_X)]
-    ANTENNA_GROUPS = lmap(get_group, np.unique(ANTENNA_NAMES))
-
-    antinode_groups = lmap(find_antinodes, ANTENNA_GROUPS)
-    antinodes = np.unique(np.concatenate(antinode_groups), axis=0)
-    dbg(antinodes, t="antinodes")
-    yield antinodes.shape[0]
-
     def find_antinodes2(antennas):
         y, x = antennas
         dy = np.subtract.outer(y, y)
@@ -49,6 +39,16 @@ def aoc08(data):
             if not antinodes.size:
                 return
             yield antinodes
+
+    ROWS, COLS = data.shape
+    ANTENNA_Y, ANTENNA_X = (data != ord(".")).nonzero()
+    ANTENNA_NAMES = data[(ANTENNA_Y, ANTENNA_X)]
+    ANTENNA_GROUPS = lmap(get_group, np.unique(ANTENNA_NAMES))
+
+    antinode_groups = lmap(find_antinodes, ANTENNA_GROUPS)
+    antinodes = np.unique(np.concatenate(antinode_groups), axis=0)
+    dbg(antinodes, t="antinodes")
+    yield antinodes.shape[0]
 
     antinode_groups2 = lmapcat(find_antinodes2, ANTENNA_GROUPS)
     antinodes2 = np.unique(np.concatenate(antinode_groups2), axis=0)
