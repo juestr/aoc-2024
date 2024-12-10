@@ -35,9 +35,9 @@ def dbg(*args, s=" ", r=False, p=False, m=None, t=None, l=logging.DEBUG, apply=N
 
             if s == " ":
                 s = "\n"
-            args = map(pformat, args)
+            args = list(map(pformat, args))
         if apply:
-            args = map(apply, args)
+            args = list(map(apply, args))
         logging.log(
             l,
             (str(t) + ":\n" if t is not None else "")
