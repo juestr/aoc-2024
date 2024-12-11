@@ -27,7 +27,7 @@ def aoc10(topo: np.ndarray):
     # First each 9 can reach itself.
     reach9s = init_reach9s()
 
-    # work our way backwards
+    # Now we work our way backwards.
     for stage in (8, 7, 6, 5, 4, 3, 2, 1, 0):
         new_reach9s = np.zeros_like(reach9s)
         for src, dst in SHIFT_NESW:
