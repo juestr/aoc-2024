@@ -1,4 +1,4 @@
-funcy
-numpy
-scipy
-pandas
+funcy >= 2.0
+numpy >= 2.1
+scipy >= 1.14
+pandas >= 2.2
