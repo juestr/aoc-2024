@@ -6,7 +6,7 @@ Each day's puzzle can be run as a standalone script without arguments. It accept
 
 aoc_util.py contains common utils, boilerplate and a commandline runner.
 
-The puzzles were written using Python 3.12, and are formatted by ruff in default configuration. I am not bothering with types or type checking this time around.
+The puzzles were written using Python 3.13, and are formatted by ruff in default configuration. I am not bothering with types or type checking this time around.
 
 All dependencies can be installed by:
 
