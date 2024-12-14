@@ -11,3 +11,5 @@ The puzzles were written using Python 3.13, and are formatted by ruff in default
 All dependencies can be installed by:
 
     python3 -m pip install -r requirements.txt
+
+Here's the [xmas tree](xmas_tree.txt) from day 14.
