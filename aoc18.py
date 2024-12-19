@@ -15,11 +15,10 @@ def aoc18(data):
             diags, offsets=(-1, 1, -COLS, COLS), shape=(SIZE, SIZE), format="dok"
         )
 
-    def add_walls(graph, sel):
-        idx = WALLS[sel]
-        for con in [idx - 1, (idx + 1) % SIZE, idx - COLS, (idx + COLS) % SIZE]:
-            graph[idx, con] = 0
-            graph[con, idx] = 0
+    def add_walls(graph, walls):
+        for con in [walls - 1, (walls + 1) % SIZE, walls - COLS, (walls + COLS) % SIZE]:
+            graph[walls, con] = 0
+            graph[con, walls] = 0
         return graph
 
     def shortest_path(graph):
@@ -32,7 +31,7 @@ def aoc18(data):
     END = ROWS * COLS - 1
     WALLS = data[:, 0] * COLS + data[:, 1]
 
-    graph = add_walls(create_full_grid_graph(), np.s_[:BYTES1])
+    graph = add_walls(create_full_grid_graph(), WALLS[:BYTES1])
     yield int(shortest_path(graph))
 
     low = BYTES1
@@ -41,7 +40,7 @@ def aoc18(data):
     while high - low > 1:
         mid = (low + high) // 2
         dbg(f"trying {mid} bytes ({low=} {high=})")
-        graph = add_walls(low_graph.copy(), np.s_[low:mid])
+        graph = add_walls(low_graph.copy(), WALLS[low:mid])
         if shortest_path(graph) == np.inf:
             high = mid
         else:
