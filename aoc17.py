@@ -2,7 +2,7 @@
 
 import logging
 import re
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field
 
 from funcy import chunks, map, re_find
 
