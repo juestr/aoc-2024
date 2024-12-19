@@ -16,9 +16,10 @@ def aoc18(data):
         )
 
     def add_walls(graph, sel):
-        # clearing whole rows and cols in dok array is effective but very slow
-        graph[WALLS[sel], :] = 0
-        graph[:, WALLS[sel]] = 0
+        idx = WALLS[sel]
+        for con in [idx - 1, (idx + 1) % SIZE, idx - COLS, (idx + COLS) % SIZE]:
+            graph[idx, con] = 0
+            graph[con, idx] = 0
         return graph
 
     def shortest_path(graph):
@@ -46,6 +47,7 @@ def aoc18(data):
         else:
             low = mid
             low_graph = graph
+    dbg(f"final {low=} {high=}")
     yield ",".join(map(str, data[low]))
 
 
