@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-from functools import cache
-
+from functools import cache, partial
 from aoc_util import run_aoc
 
 
@@ -12,26 +11,13 @@ def setup(data):
 
 def aoc19(patterns, designs):
     @cache
-    def validate(design):
-        if not design:
-            return True
-        else:
-            return any(
-                validate(design[len(p) :]) for p in patterns if design.startswith(p)
-            )
+    def check(agg, design):
+        return not design or agg(
+            check(agg, design[len(p) :]) for p in patterns if design.startswith(p)
+        )
 
-    yield sum(map(validate, designs))
-
-    @cache
-    def count(design):
-        if not design:
-            return 1
-        else:
-            return sum(
-                count(design[len(p) :]) for p in patterns if design.startswith(p)
-            )
-
-    yield sum(map(count, designs))
+    yield sum(map(partial(check, any), designs))
+    yield sum(map(partial(check, sum), designs))
 
 
 if __name__ == "__main__":
