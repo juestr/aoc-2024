@@ -3,3 +3,4 @@ numpy >= 2.1
 scipy >= 1.14
 pandas >= 2.2
 sympy >= 1.13
+networkx >= 3.4
