@@ -24,27 +24,19 @@ def aoc22(data):
     yield np.sum(price[:, 2000])
 
     price %= 10
-    delta = price[:, 1:] - price[:, :-1]
-    delta4sig = correlate(delta + 10, [[1_000_000, 10_000, 100, 1]], mode="valid")
-    unique_delta4sig = np.zeros_like(delta4sig)
-    for i in range(delta4sig.shape[0]):
-        _, uidx = np.unique(delta4sig[i], return_index=True)
-        unique_delta4sig[i, uidx] = 1
-    delta4sig *= unique_delta4sig
-
-    ctr = Counter(delta4sig.flat)
-    del ctr[0]
-    high = 0
-    for d4s, n in ctr.most_common():
-        if n * 9 < high:
-            break
-        high = max(high, np.sum(price[:, 4:] * (delta4sig == d4s)))
-    yield high
+    delta4sig = correlate(
+        price[:, 1:] - price[:, :-1] + 10,
+        [100 ** np.arange(4, dtype="int32")],
+        mode="valid",
+    )
+    ctr = Counter()
+    for d4s_row, price_row in zip(delta4sig, price[:, 4:]):
+        uniques, uidx = np.unique(d4s_row, return_index=True)
+        for d4s, p in zip(uniques, price_row[uidx]):
+            ctr[d4s] += p
+    [(_, bananas)] = ctr.most_common(1)
+    yield bananas
 
 
 if __name__ == "__main__":
-    run_aoc(
-        aoc22,
-        read=(np.loadtxt, dict(dtype="int32")),
-        np_printoptions=dict(linewidth=160, threshold=3000, edgeitems=8),
-    )
+    run_aoc(aoc22, read=(np.loadtxt, dict(dtype="int32")))
