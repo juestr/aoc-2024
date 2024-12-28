@@ -49,7 +49,24 @@ def aoc24(wires, gates):
         new_gates[g2] = gates[g1]
         return new_gates
 
-    def eval_as_int(gates, x, y):
+    def enumerate_swaps(gates, faulty_bit, _all_gates=frozenset(gates.keys())):
+        @cache
+        def gates_used(name):
+            if name not in gates:
+                return set()
+            else:
+                _, a, b = gates[name]
+                return {name} | gates_used(a) | gates_used(b)
+
+        good_gates = gates_used(z(faulty_bit - 1)) if faulty_bit > 0 else set()
+        good_gates |= {z(i) for i in range(faulty_bit - 1)}
+        faulty_gates = gates_used(z(faulty_bit)) - good_gates
+        swapable_gates = _all_gates - good_gates
+        for g1, g2 in product(faulty_gates, swapable_gates):
+            if g1 != g2:
+                yield g1, g2
+
+    def eval_as_int(gates, x: int, y: int) -> int:
         xbits = f"{x:045b}"[::-1]
         ybits = f"{y:045b}"[::-1]
         wires = {
@@ -62,14 +79,6 @@ def aoc24(wires, gates):
         return int("".join(map(str, zbits[::-1])), 2)
 
     def find_lowest_faulty_bit(gates, stop_on=0, repeat=1000):
-        @cache
-        def gates_used(name):
-            if name not in gates:
-                return set()
-            else:
-                _, a, b = gates[name]
-                return {name} | gates_used(a) | gates_used(b)
-
         min_faulty_bit = 100
         for _ in range(repeat):
             x = randint(0, 1 << 45 - 1)
@@ -81,46 +90,34 @@ def aoc24(wires, gates):
                 if min_faulty_bit <= stop_on:
                     break
         if min_faulty_bit < 100:
-            good_gates = (
-                gates_used(z(min_faulty_bit - 1)) if min_faulty_bit > 0 else set()
-            )
-            good_gates |= {z(i) for i in range(min_faulty_bit - 1)}
-            faulty_gates = gates_used(z(min_faulty_bit)) - good_gates
-            swapable_gates = all_gates - good_gates
-            return min_faulty_bit, faulty_gates, swapable_gates
+            return min_faulty_bit
         else:
-            return None, set(), set()
+            return None
 
-    def search(gates, faulty_bit, faulty_gates, swapable_gates, swaps=(), level=0):
-        for g1, g2 in product(faulty_gates, swapable_gates):
-            if g1 != g2:
-                swapped_gates = swap_gates(gates, g1, g2)
-                try:
-                    faulty_bit2, faulty_gates2, swapable_gates2 = (
-                        find_lowest_faulty_bit(swapped_gates, stop_on=faulty_bit)
+    def search(gates, faulty_bit, swaps=(), level=0):
+        for g1, g2 in enumerate_swaps(gates, faulty_bit):
+            swapped_gates = swap_gates(gates, g1, g2)
+            try:
+                faulty_bit2 = find_lowest_faulty_bit(swapped_gates, stop_on=faulty_bit)
+            except RecursionError:
+                # a very cheap trick to avoid checking for illegal cycles explicitly
+                pass
+            else:
+                if faulty_bit2 is None:
+                    return ",".join(sorted((*swaps, g1, g2)))
+                elif faulty_bit2 > faulty_bit and level < 4:
+                    result = search(
+                        swapped_gates,
+                        faulty_bit2,
+                        swaps=(*swaps, g1, g2),
+                        level=level + 1,
                     )
-                except RecursionError:
-                    # a very cheap trick to avoid checking for illegal cycles explicitly
-                    pass
-                else:
-                    if faulty_bit2 is None:
-                        return ",".join(sorted((*swaps, g1, g2)))
-                    elif faulty_bit2 > faulty_bit and level < 4:
-                        result = search(
-                            swapped_gates,
-                            faulty_bit2,
-                            faulty_gates2,
-                            swapable_gates2,
-                            swaps=(*swaps, g1, g2),
-                            level=level + 1,
-                        )
-                        if result:
-                            return result
+                    if result:
+                        return result
         return None
 
-    all_gates = set(gates.keys())
-    faulty_bit, faulty_gates, swapable_gates = find_lowest_faulty_bit(gates)
-    yield search(gates, faulty_bit, faulty_gates, swapable_gates)
+    faulty_bit = find_lowest_faulty_bit(gates)
+    yield search(gates, faulty_bit)
 
 
 if __name__ == "__main__":
